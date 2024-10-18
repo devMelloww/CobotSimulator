@@ -2,26 +2,36 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Blackboard {
-    private List<int[]> anglesList;
+    static private List<int[]> anglesList;
+    static private Blackboard blackboard = null;
 
-    public Blackboard() {
+    private Blackboard() {
         anglesList = new ArrayList<>();
     }
 
+    static public Blackboard Instance() {
+        if (Objects.isNull(blackboard)) {
+            blackboard = new Blackboard();
+        }
+
+        return blackboard;
+    }
+
     // Method to add angles to the blackboard
-    public void addAngles(int[] angles) {
+    static public void addAngles(int[] angles) {
         anglesList.add(angles);
     }
 
     // Method to retrieve all stored angles
-    public List<int[]> getAllAngles() {
+    static public List<int[]> getAllAngles() {
         return anglesList;
     }
 
     // Display the angles stored in the blackboard
-    public void displayAngles() {
+    static public void displayAngles() {
         System.out.println("Stored Angles on the Blackboard:");
         for (int[] angles : anglesList) {
             System.out.print("[");

@@ -21,7 +21,7 @@ public class Main extends JFrame {
         // Initialize and display the GUI
         SwingUtilities.invokeLater(() -> {
             Main frame = new Main();
-            Blackboard blackboard = new Blackboard();
+            Blackboard blackboard = Blackboard.Instance();
             ButtonPanel buttonPanel = new ButtonPanel();
             SimulationPanel simulationPanel = new SimulationPanel();
             SimulationController controller = new SimulationController(buttonPanel);
@@ -32,7 +32,7 @@ public class Main extends JFrame {
         });
 
         // Create a blackboard instance to share between server and controller
-        Blackboard blackboard = new Blackboard();
+        Blackboard blackboard = Blackboard.Instance();
 
         // Start the server and client in separate threads
         Thread serverThread = new Thread(new Server(blackboard));
