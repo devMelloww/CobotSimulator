@@ -13,9 +13,9 @@ public class CobotServer extends Thread {
     @Override
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(12345)) {
-            System.out.println("Server started. Waiting for client...");
+            System.out.println("main.Server started. Waiting for client...");
             Socket clientSocket = serverSocket.accept();
-            System.out.println("Client connected.");
+            System.out.println("main.Client connected.");
 
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
