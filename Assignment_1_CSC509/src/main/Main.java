@@ -26,7 +26,6 @@ public class Main extends JFrame {
             SimulationPanel simulationPanel = new SimulationPanel();
             SimulationController controller = new SimulationController(buttonPanel);
 
-
             frame.add(buttonPanel, BorderLayout.SOUTH);
             frame.add(simulationPanel, BorderLayout.CENTER);
             frame.setVisible(true);
