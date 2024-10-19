@@ -5,8 +5,16 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
+/***
+ * The Client class is responsible for establishing a connection to a server and sending angles based on input.
+ * It implements runnable to allow execution to run in separate threads
+ */
 public class Client implements Runnable {
 
+    /**
+     * This run method creates a socket connection to the server. It allows the user to input angles
+     * through the console and sends these angles to the server until the user chooses to exit.
+     */
     @Override
     public void run() {
         try (Socket socket = new Socket("localhost", 12345);
@@ -42,7 +50,6 @@ public class Client implements Runnable {
                     System.out.println("Enter Angle 6: ");
                     int angle6 = scanner.nextInt();
 
-                    // Send angles to the server
                     out.println(angle1);
                     out.println(angle2);
                     out.println(angle3);
@@ -53,7 +60,6 @@ public class Client implements Runnable {
                     System.out.println("Angles sent: " + angle1 + ", " + angle2 + ", " + angle3 + ", " + angle4 + ", "
                             + angle5 + ", " + angle6);
 
-                    // Consume newline left by nextInt
                     scanner.nextLine();
                 } else {
                     System.out.println("Invalid input, please type 'angles' to input angles or 'exit' to stop.");

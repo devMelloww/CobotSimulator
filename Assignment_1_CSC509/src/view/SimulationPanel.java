@@ -1,7 +1,5 @@
 package view;
 
-import model.Blackboard;
-
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -9,16 +7,25 @@ import java.beans.PropertyChangeListener;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/***
+ * This class represents a graphical panel that visualizes the simulation of robotic arm movements.
+ * It listens for changes in angles from the Blackboard and updates the GUI.
+ */
 public class SimulationPanel extends JPanel implements PropertyChangeListener {
     private int angle1 = 0, angle2 = 0, angle3 = 0, angle4 = 0, angle5 = 0, angle6 = 0;
     private Queue<int[]> AngleQueue = new LinkedList<>();
 
-    // Track which angle is currently being animated
-
+    /***
+     * Constructor to create the SimulationPanel and set its preferred size.
+     */
     public SimulationPanel() {
         setPreferredSize(new Dimension(800, 600)); // Set the size of the panel
     }
 
+    /***
+     * Getter methods to retrieve the current angles.
+     * @return current angles.
+     */
     public int getAngle1() {
         return angle1;
     }
@@ -38,6 +45,9 @@ public class SimulationPanel extends JPanel implements PropertyChangeListener {
         return angle6;
     }
 
+    /***
+     * Increment methods to update angles.
+     */
     public void incrementAngle1() {
         angle1++;
     }
@@ -57,6 +67,9 @@ public class SimulationPanel extends JPanel implements PropertyChangeListener {
         angle6++;
     }
 
+    /***
+     * Decrement methods to update angles.
+     */
     public void decrementAngle1() {
         angle1--;
     }
@@ -75,11 +88,20 @@ public class SimulationPanel extends JPanel implements PropertyChangeListener {
     public void decrementAngle6() {
         angle6--;
     }
+
+    /***
+     * Getter for the angle queue
+     * @return
+     */
     public Queue<int[]> getAngleQueue() {
         return AngleQueue;
     }
 
-
+    /***
+     * This method receives new angles from the Blackboard and adds them to the queue.
+     * @param evt A PropertyChangeEvent object describing the event source
+     *          and the property that has changed.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         int[] angles = (int[]) evt.getNewValue();
@@ -88,12 +110,20 @@ public class SimulationPanel extends JPanel implements PropertyChangeListener {
 
     }
 
+    /***
+     * This method is called by the Swing framework whenever the panel needs to be repainted.
+     * @param g the <code>Graphics</code> object to protect
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        drawArm(g);  // Call the custom drawing method
+        drawArm(g);
     }
 
+    /***
+     * This method draws the robotic arm on the panel based on current angles.
+     * @param g Used for drawing
+     */
     public void drawArm(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setStroke(new BasicStroke(6));
@@ -125,7 +155,6 @@ public class SimulationPanel extends JPanel implements PropertyChangeListener {
         int y7 = y6 - (int) (length * Math.sin(Math.toRadians(angle6)));
         g2d.drawLine(x6, y6, x7, y7);
 
-        // Draw joints as blue circles
         g2d.setColor(Color.BLUE);
         g2d.fillOval(x1 - 5, y1 - 5, 10, 10); // Joint 1
         g2d.fillOval(x2 - 5, y2 - 5, 10, 10); // Joint 2
