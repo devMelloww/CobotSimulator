@@ -1,15 +1,18 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 
 public class Blackboard {
-    static private List<int[]> anglesList;
+    private int[] anglesArray;
     static private Blackboard blackboard = null;
+    private PropertyChangeSupport propertyChangeSupport;
+    private String event = "AnglesAdded";
 
     private Blackboard() {
-        anglesList = new ArrayList<>();
+        propertyChangeSupport = new PropertyChangeSupport(this);
+        anglesArray = new int[]{};
     }
 
     static public Blackboard Instance() {
@@ -20,27 +23,34 @@ public class Blackboard {
         return blackboard;
     }
 
+    public void AddListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
     // Method to add angles to the blackboard
-    static public void addAngles(int[] angles) {
-        anglesList.add(angles);
+    public void SetAngles(int[] angles) {
+        int[] oldArray = anglesArray;
+        anglesArray = angles;
+        //fire change
+        propertyChangeSupport.firePropertyChange(event, oldArray, anglesArray);
     }
 
     // Method to retrieve all stored angles
-    static public List<int[]> getAllAngles() {
-        return anglesList;
+    public int[] getAllAngles() {
+        return anglesArray;
     }
 
     // Display the angles stored in the blackboard
-    static public void displayAngles() {
+    public void displayAngles() {
         System.out.println("Stored Angles on the Blackboard:");
-        for (int[] angles : anglesList) {
-            System.out.print("[");
-            for (int i = 0; i < angles.length; i++) {
-                System.out.print(angles[i]);
-                if (i < angles.length - 1) System.out.print(", ");
-            }
-            System.out.println("]");
+
+        System.out.print("[");
+        for (int i = 0; i < anglesArray.length; i++) {
+            System.out.print(anglesArray[i]);
+            if (i < anglesArray.length - 1) System.out.print(", ");
         }
+        System.out.println("]");
+
     }
 }
 

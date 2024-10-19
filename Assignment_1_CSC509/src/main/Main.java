@@ -21,9 +21,10 @@ public class Main extends JFrame {
         // Initialize and display the GUI
         SwingUtilities.invokeLater(() -> {
             Main frame = new Main();
-            Blackboard blackboard = Blackboard.Instance();
-            ButtonPanel buttonPanel = new ButtonPanel();
             SimulationPanel simulationPanel = new SimulationPanel();
+            Blackboard.Instance().AddListener(simulationPanel);
+
+            ButtonPanel buttonPanel = new ButtonPanel(simulationPanel);
             SimulationController controller = new SimulationController(buttonPanel);
 
             frame.add(buttonPanel, BorderLayout.SOUTH);
