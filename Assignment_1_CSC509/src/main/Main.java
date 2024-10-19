@@ -22,10 +22,10 @@ public class Main extends JFrame {
         SwingUtilities.invokeLater(() -> {
             Main frame = new Main();
             SimulationPanel simulationPanel = new SimulationPanel();
+            SimulationController controller = new SimulationController(simulationPanel);
             Blackboard.Instance().AddListener(simulationPanel);
 
-            ButtonPanel buttonPanel = new ButtonPanel(simulationPanel);
-            SimulationController controller = new SimulationController(buttonPanel);
+            ButtonPanel buttonPanel = new ButtonPanel(controller);
 
             frame.add(buttonPanel, BorderLayout.SOUTH);
             frame.add(simulationPanel, BorderLayout.CENTER);

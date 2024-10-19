@@ -11,169 +11,74 @@ import java.util.Queue;
 
 public class SimulationPanel extends JPanel implements PropertyChangeListener {
     private int angle1 = 0, angle2 = 0, angle3 = 0, angle4 = 0, angle5 = 0, angle6 = 0;
-    private int targetAngle1 = 0, targetAngle2 = 0, targetAngle3 = 0, targetAngle4 = 0, targetAngle5 = 0, targetAngle6 = 0;
     private Queue<int[]> AngleQueue = new LinkedList<>();
-    private Timer simulationTimer;
-    private boolean simulate = false;
-    private int phase = 1;  // Track which angle is currently being animated
+
+    // Track which angle is currently being animated
 
     public SimulationPanel() {
         setPreferredSize(new Dimension(800, 600)); // Set the size of the panel
     }
 
-
-    public void StartSimulation() {
-        if (AngleQueue.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No angles to simulate.");
-            return;
-        }
-        simulate = true;
-        phase = 1; // Start with the first angle
-        RunSimulation();
+    public int getAngle1() {
+        return angle1;
+    }
+    public int getAngle2() {
+        return angle2;
+    }
+    public int getAngle3() {
+        return angle3;
+    }
+    public int getAngle4() {
+        return angle4;
+    }
+    public int getAngle5() {
+        return angle5;
+    }
+    public int getAngle6() {
+        return angle6;
     }
 
-    public void StopSimulation() {
-        if (simulationTimer != null && simulationTimer.isRunning()) {
-            simulationTimer.stop();
-        }
-        simulate = false;
-        System.exit(0);
+    public void incrementAngle1() {
+        angle1++;
+    }
+    public void incrementAngle2() {
+        angle2++;
+    }
+    public void incrementAngle3() {
+        angle3++;
+    }
+    public void incrementAngle4() {
+        angle4++;
+    }
+    public void incrementAngle5() {
+        angle5++;
+    }
+    public void incrementAngle6() {
+        angle6++;
     }
 
-    private void RunSimulation() {
-        if (AngleQueue.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "All angles simulated.");
-            return;
-        }
-
-        // Get the next set of angles from the queue
-        int[] angles = AngleQueue.remove();
-
-        // Add the new angles to the current targets (cumulative rotation)
-        targetAngle1 += angles[0];
-        targetAngle2 += angles[1];
-        targetAngle3 += angles[2];
-        targetAngle4 += angles[3];
-        targetAngle5 += angles[4];
-        targetAngle6 += angles[5];
-
-        final int delay = 50; // Delay for each update in milliseconds
-        simulationTimer = new Timer(delay, e -> updateAngles());
-        simulationTimer.start(); // Start the timer to begin simulation
+    public void decrementAngle1() {
+        angle1--;
+    }
+    public void decrementAngle2() {
+        angle2--;
+    }
+    public void decrementAngle3() {
+        angle3--;
+    }
+    public void decrementAngle4() {
+        angle4--;
+    }
+    public void decrementAngle5() {
+        angle5--;
+    }
+    public void decrementAngle6() {
+        angle6--;
+    }
+    public Queue<int[]> getAngleQueue() {
+        return AngleQueue;
     }
 
-    // Method to update angles incrementally and move to the next phase
-    private void updateAngles() {
-        boolean finished = false;
-
-        switch (phase) {
-            case 1:
-                if (adjustAngleTowardsTarget(1, targetAngle1)) {
-                    phase = 2;
-                }
-                break;
-            case 2:
-                if (adjustAngleTowardsTarget(2, targetAngle2)) {
-                    phase = 3;
-                }
-                break;
-            case 3:
-                if (adjustAngleTowardsTarget(3, targetAngle3)) {
-                    phase = 4;
-                }
-                break;
-            case 4:
-                if (adjustAngleTowardsTarget(4, targetAngle4)) {
-                    phase = 5;
-                }
-                break;
-            case 5:
-                if (adjustAngleTowardsTarget(5, targetAngle5)) {
-                    phase = 6;
-                }
-                break;
-            case 6:
-                if (adjustAngleTowardsTarget(6, targetAngle6)) {
-                    finished = true; // All angles for this set are done
-                }
-                break;
-        }
-
-        repaint(); // Redraw the arm based on updated angles
-
-        if (finished) {
-            simulationTimer.stop(); // Stop the timer for this set
-
-            // Check if there are more sets of angles to simulate
-            if (!AngleQueue.isEmpty()) {
-                phase = 1; // Reset phase for the next set of angles
-                RunSimulation(); // Automatically start simulating the next set
-            } else {
-                JOptionPane.showMessageDialog(null, "All angle sets have been simulated!");
-            }
-        }
-    }
-
-    // Adjust the specific angle towards its target (incrementally towards cumulative targets)
-    private boolean adjustAngleTowardsTarget(int angleIndex, int targetAngle) {
-        switch (angleIndex) {
-            case 1:
-                if (angle1 < targetAngle) {
-                    angle1++;
-                } else if (angle1 > targetAngle) {
-                    angle1--;
-                } else {
-                    return true; // Finished with this angle
-                }
-                break;
-            case 2:
-                if (angle2 < targetAngle) {
-                    angle2++;
-                } else if (angle2 > targetAngle) {
-                    angle2--;
-                } else {
-                    return true;
-                }
-                break;
-            case 3:
-                if (angle3 < targetAngle) {
-                    angle3++;
-                } else if (angle3 > targetAngle) {
-                    angle3--;
-                } else {
-                    return true;
-                }
-                break;
-            case 4:
-                if (angle4 < targetAngle) {
-                    angle4++;
-                } else if (angle4 > targetAngle) {
-                    angle4--;
-                } else {
-                    return true;
-                }
-                break;
-            case 5:
-                if (angle5 < targetAngle) {
-                    angle5++;
-                } else if (angle5 > targetAngle) {
-                    angle5--;
-                } else {
-                    return true;
-                }
-                break;
-            case 6:
-                if (angle6 < targetAngle) {
-                    angle6++;
-                } else if (angle6 > targetAngle) {
-                    angle6--;
-                } else {
-                    return true;
-                }
-                break;
-        }
-        return false; // Still adjusting the angle
-    }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {

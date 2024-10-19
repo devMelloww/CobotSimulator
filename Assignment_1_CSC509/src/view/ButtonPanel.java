@@ -1,5 +1,6 @@
 package view;
 
+import controller.SimulationController;
 import model.Blackboard;
 
 import javax.swing.*;
@@ -11,20 +12,20 @@ public class ButtonPanel extends JPanel {
     private JButton startButton;
     private JButton stopButton;
 
-    public ButtonPanel(SimulationPanel simulationPanel) {
+    public ButtonPanel(SimulationController simulationController) {
         startButton = new JButton("Start");
         stopButton = new JButton("Terminate");
 
         startButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                simulationPanel.StartSimulation();
+                simulationController.StartSimulation();
             }
         });
 
         // Stop button action listener (stops the timer)
         stopButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                simulationPanel.StopSimulation();
+                simulationController.StopSimulation();
             }
         });
 
