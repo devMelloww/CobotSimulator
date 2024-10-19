@@ -13,7 +13,7 @@ public class ButtonPanel extends JPanel {
 
     public ButtonPanel(SimulationPanel simulationPanel) {
         startButton = new JButton("Start");
-        stopButton = new JButton("Stop");
+        stopButton = new JButton("Terminate");
 
         startButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

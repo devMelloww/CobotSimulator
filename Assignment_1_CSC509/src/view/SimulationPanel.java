@@ -1,5 +1,7 @@
 package view;
 
+import model.Blackboard;
+
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -35,6 +37,7 @@ public class SimulationPanel extends JPanel implements PropertyChangeListener {
             simulationTimer.stop();
         }
         simulate = false;
+        System.exit(0);
     }
 
     private void RunSimulation() {
