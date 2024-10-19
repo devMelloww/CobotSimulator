@@ -1,16 +1,20 @@
-import java.io.*;
-import java.net.*;
+package main;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.Scanner;
 
-public class RobotArmClient {
-    public static void main(String[] args) {
+public class Client implements Runnable {
+
+    @Override
+    public void run() {
         try (Socket socket = new Socket("localhost", 12345);
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              Scanner scanner = new Scanner(System.in)) {
 
             String input = "";
             while (true) {
-                // Check if the user wants to exit
                 System.out.println("Enter 'exit' to stop or 'angles' to input angles: ");
                 input = scanner.nextLine();
 
@@ -19,7 +23,6 @@ public class RobotArmClient {
                     break;
                 }
 
-                // Prompt user to enter angles if the command is 'angles'
                 if (input.equalsIgnoreCase("angles")) {
                     System.out.println("Enter Angle 1: ");
                     int angle1 = scanner.nextInt();
