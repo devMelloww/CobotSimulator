@@ -19,6 +19,7 @@ public class SimulationPanel extends JPanel implements PropertyChangeListener {
         setPreferredSize(new Dimension(800, 600)); // Set the size of the panel
     }
 
+
     public void StartSimulation() {
         if (AngleQueue.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No angles to simulate.");
