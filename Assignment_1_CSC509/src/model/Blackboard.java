@@ -1,36 +1,43 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.Objects;
 
 public class Blackboard {
-    private List<int[]> anglesList;
+    private int[] anglesArray;
+    static private Blackboard blackboard = null;
+    private PropertyChangeSupport propertyChangeSupport;
+    private String event = "AnglesAdded";
 
-    public Blackboard() {
-        anglesList = new ArrayList<>();
+    private Blackboard() {
+        propertyChangeSupport = new PropertyChangeSupport(this);
+        anglesArray = new int[]{};
+    }
+
+    static public Blackboard Instance() {
+        if (Objects.isNull(blackboard)) {
+            blackboard = new Blackboard();
+        }
+
+        return blackboard;
+    }
+
+    public void AddListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
     // Method to add angles to the blackboard
-    public void addAngles(int[] angles) {
-        anglesList.add(angles);
+    public void SetAngles(int[] angles) {
+        int[] oldArray = anglesArray;
+        anglesArray = angles;
+        //fire change
+        propertyChangeSupport.firePropertyChange(event, oldArray, anglesArray);
     }
 
     // Method to retrieve all stored angles
-    public List<int[]> getAllAngles() {
-        return anglesList;
-    }
-
-    // Display the angles stored in the blackboard
-    public void displayAngles() {
-        System.out.println("Stored Angles on the Blackboard:");
-        for (int[] angles : anglesList) {
-            System.out.print("[");
-            for (int i = 0; i < angles.length; i++) {
-                System.out.print(angles[i]);
-                if (i < angles.length - 1) System.out.print(", ");
-            }
-            System.out.println("]");
-        }
+    public int[] getAllAngles() {
+        return anglesArray;
     }
 }
 

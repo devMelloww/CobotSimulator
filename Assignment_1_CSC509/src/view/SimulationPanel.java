@@ -2,18 +2,35 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
-public class SimulationPanel extends JPanel {
+public class SimulationPanel extends JPanel implements PropertyChangeListener {
     private int angle1 = 0;  // Initializing the angles to 0
     private int angle2 = 0;
     private int angle3 = 0;
     private int angle4 = 0;
     private int angle5 = 0;
     private int angle6 = 0;
+    private Queue<int[]> AngleQueue = new LinkedList<>();
+
+    private boolean Simulate = false;
 
     public SimulationPanel() {
         // Initialize panel properties if needed
         setPreferredSize(new Dimension(800, 600)); // Set the size of the panel
+    }
+
+    public void StartSimulation() {
+        Simulate = true;
+        RunSimulation();
+    }
+
+    public void StopSimulation() {
+        Simulate = false;
     }
 
     // Method to set angles, to be called externally (optional)
@@ -24,7 +41,49 @@ public class SimulationPanel extends JPanel {
         this.angle4 = angle4;
         this.angle5 = angle5;
         this.angle6 = angle6;
+
         repaint(); // Repaint the panel to reflect the new angles
+    }
+
+    private void RunSimulation() {
+        while (!AngleQueue.isEmpty() && Simulate) {
+            int[] angles = AngleQueue.remove();
+            setAngles(angles[0], angles[1], angles[2], angles[3], angles[4], angles[5]);
+            String angleStr = String.format("[%d, %d, %d, %d, %d, %d]", angles[0],
+                                            angles[1], angles[2], angles[3], angles[4],
+                                            angles[5]);
+            int result = JOptionPane.showConfirmDialog(null,
+                                              "Angles\n" + angleStr + "\nset!\nContinue?");
+
+            if (result != 0) { //yes == 0, no/cancel != 0
+                break;
+            }
+        }
+
+        if (AngleQueue.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "All angles simulated!");
+        }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        int[] angles = (int[]) evt.getNewValue();
+        AngleQueue.add(angles);
+        System.out.println("Simulator received angles from BlackBoard");
+        displayAngles();
+    }
+
+    public void displayAngles() {
+        System.out.println("Angles Queued to be simulated:");
+
+        for (int[] anglesArray : AngleQueue) {
+            System.out.print("[");
+            for (int i = 0; i < anglesArray.length; i++) {
+                System.out.print(anglesArray[i]);
+                if (i < anglesArray.length - 1) System.out.print(", ");
+            }
+            System.out.println("]");
+        }
     }
 
     @Override
