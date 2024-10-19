@@ -40,7 +40,7 @@ public class Server implements Runnable {
                     if (count == 6) {
                         blackboard.SetAngles(angles);
                         System.out.println("Angles received and stored in blackboard.");
-                        blackboard.displayAngles();  // Optional: Display stored angles
+//                        blackboard.displayAngles();  // Optional: Display stored angles
                         angles = new int[6];  // Reset for next batch of angles
                         count = 0;
                     }

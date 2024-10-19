@@ -39,18 +39,5 @@ public class Blackboard {
     public int[] getAllAngles() {
         return anglesArray;
     }
-
-    // Display the angles stored in the blackboard
-    public void displayAngles() {
-        System.out.println("Stored Angles on the Blackboard:");
-
-        System.out.print("[");
-        for (int i = 0; i < anglesArray.length; i++) {
-            System.out.print(anglesArray[i]);
-            if (i < anglesArray.length - 1) System.out.print(", ");
-        }
-        System.out.println("]");
-
-    }
 }
 

@@ -49,7 +49,11 @@ public class SimulationPanel extends JPanel implements PropertyChangeListener {
         while (!AngleQueue.isEmpty() && Simulate) {
             int[] angles = AngleQueue.remove();
             setAngles(angles[0], angles[1], angles[2], angles[3], angles[4], angles[5]);
-            int result = JOptionPane.showConfirmDialog(null, "Angles set! Continue?");
+            String angleStr = String.format("[%d, %d, %d, %d, %d, %d]", angles[0],
+                                            angles[1], angles[2], angles[3], angles[4],
+                                            angles[5]);
+            int result = JOptionPane.showConfirmDialog(null,
+                                              "Angles\n" + angleStr + "\nset!\nContinue?");
 
             if (result != 0) { //yes == 0, no/cancel != 0
                 break;
@@ -64,8 +68,22 @@ public class SimulationPanel extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         int[] angles = (int[]) evt.getNewValue();
-        System.out.println("Simulator received angles from BlackBoard");
         AngleQueue.add(angles);
+        System.out.println("Simulator received angles from BlackBoard");
+        displayAngles();
+    }
+
+    public void displayAngles() {
+        System.out.println("Angles Queued to be simulated:");
+
+        for (int[] anglesArray : AngleQueue) {
+            System.out.print("[");
+            for (int i = 0; i < anglesArray.length; i++) {
+                System.out.print(anglesArray[i]);
+                if (i < anglesArray.length - 1) System.out.print(", ");
+            }
+            System.out.println("]");
+        }
     }
 
     @Override
