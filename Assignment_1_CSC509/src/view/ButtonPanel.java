@@ -14,6 +14,8 @@ import java.awt.event.ActionListener;
 public class ButtonPanel extends JPanel {
     private JButton startButton;
     private JButton stopButton;
+    private JButton pauseButton;
+    private JButton resumeButton;
 
     /***
      * Constructor to create the ButtonPanel and initialize buttons. Sets up action listeners for the
@@ -23,6 +25,8 @@ public class ButtonPanel extends JPanel {
     public ButtonPanel(SimulationController simulationController) {
         startButton = new JButton("Start");
         stopButton = new JButton("Terminate");
+        pauseButton = new JButton("Pause");
+        resumeButton = new JButton("Resume");
 
         startButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -36,26 +40,26 @@ public class ButtonPanel extends JPanel {
             }
         });
 
-        setLayout(new GridLayout(1,2));
+        pauseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                simulationController.PauseSimulation();
+            }
+        });
+
+        resumeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                simulationController.ResumeSimulation();
+            }
+        });
+
+        setLayout(new GridLayout(1,4));
         setBackground(Color.GRAY);
 
         add(startButton);
         add(stopButton);
-    }
-
-    /***
-     * Getter method for the start button.
-     * @return Start button.
-     */
-    public JButton getStartButton() {
-        return startButton;
-    }
-
-    /***
-     * Getter method for the stop button.
-     * @return Stop button.
-     */
-    public JButton getStopButton() {
-        return stopButton;
+        add(pauseButton);
+        add(resumeButton);
     }
 }

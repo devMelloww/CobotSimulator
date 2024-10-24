@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -14,12 +15,27 @@ import java.util.Queue;
 public class SimulationPanel extends JPanel implements PropertyChangeListener {
     private int angle1 = 0, angle2 = 0, angle3 = 0, angle4 = 0, angle5 = 0, angle6 = 0;
     private Queue<int[]> AngleQueue = new LinkedList<>();
+    private JLabel staticStatusLabel;
+    private JLabel dynamicStatusLabel;
+    private boolean isRunning = false;
 
     /***
      * Constructor to create the SimulationPanel and set its preferred size.
      */
     public SimulationPanel() {
-        setPreferredSize(new Dimension(800, 600)); // Set the size of the panel
+        setPreferredSize(new Dimension(800, 600));
+
+        staticStatusLabel = new JLabel("Status: ");
+        staticStatusLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        staticStatusLabel.setForeground(Color.BLACK);  // Always black
+
+        dynamicStatusLabel = new JLabel("Idle");
+        dynamicStatusLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        dynamicStatusLabel.setForeground(Color.RED);
+
+        this.setLayout(new FlowLayout(FlowLayout.CENTER));
+        this.add(staticStatusLabel);
+        this.add(dynamicStatusLabel);
     }
 
     /***
@@ -98,6 +114,37 @@ public class SimulationPanel extends JPanel implements PropertyChangeListener {
     }
 
     /***
+     * Resets all angles to initial values (0 degrees).
+     */
+    public void resetAngles() {
+        angle1 = 0;
+        angle2 = 0;
+        angle3 = 0;
+        angle4 = 0;
+        angle5 = 0;
+        angle6 = 0;
+        repaint(); // Repaint to reflect the reset state
+    }
+
+    /***
+     * Method to set the status to "Running" when the simulation starts.
+     */
+    public void setRunningStatus() {
+        isRunning = true;
+        dynamicStatusLabel.setText("Running");
+        dynamicStatusLabel.setForeground(Color.decode("#008000"));  // Change to green when running
+    }
+
+    /***
+     * Method to set the status to "Idle" when the simulation stops.
+     */
+    public void setIdleStatus() {
+        isRunning = false;
+        dynamicStatusLabel.setText("Idle");
+        dynamicStatusLabel.setForeground(Color.RED);  // Change to red when idle
+    }
+
+    /***
      * This method receives new angles from the Blackboard and adds them to the queue.
      * @param evt A PropertyChangeEvent object describing the event source
      *          and the property that has changed.
@@ -106,8 +153,8 @@ public class SimulationPanel extends JPanel implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         int[] angles = (int[]) evt.getNewValue();
         AngleQueue.add(angles);
-        System.out.println("Simulator received angles from Blackboard");
 
+        System.out.println("Simulator received angles from Blackboard");
     }
 
     /***
@@ -128,40 +175,59 @@ public class SimulationPanel extends JPanel implements PropertyChangeListener {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setStroke(new BasicStroke(6));
 
-        int x1 = 300, y1 = 450;
-        int length = 50;
+       // int x1 = 300, y1 = 450;
+        int centerX = (getWidth() / 2) - 150;
+        int centerY = getHeight() - 300;
+        int length = 60;
 
-        int x2 = x1 + (int) (length * Math.cos(Math.toRadians(angle1)));
-        int y2 = y1 - (int) (length * Math.sin(Math.toRadians(angle1)));
-        g2d.drawLine(x1, y1, x2, y2);
 
-        int x3 = x2 + (int) (length * Math.cos(Math.toRadians(angle2)));
-        int y3 = y2 - (int) (length * Math.sin(Math.toRadians(angle2)));
-        g2d.drawLine(x2, y2, x3, y3);
+        int[] angles = {angle1, angle2, angle3, angle4, angle5, angle6};
 
-        int x4 = x3 + (int) (length * Math.cos(Math.toRadians(angle3)));
-        int y4 = y3 - (int) (length * Math.sin(Math.toRadians(angle3)));
-        g2d.drawLine(x3, y3, x4, y4);
+        Color[] colors = {
+                Color.decode("#6667ab"), // For angle1
+                Color.decode("#f18aad"), // For angle2
+                Color.decode("#ea6759"), // For angle3
+                Color.decode("#f88f58"), // For angle4
+                Color.decode("#f3c65f"), // For angle5
+                Color.decode("#8bc28c")  // For angle6
+        };
 
-        int x5 = x4 + (int) (length * Math.cos(Math.toRadians(angle4)));
-        int y5 = y4 - (int) (length * Math.sin(Math.toRadians(angle4)));
-        g2d.drawLine(x4, y4, x5, y5);
+        int[] xPositions = new int[angles.length + 1];
+        int[] yPositions = new int[angles.length + 1];
 
-        int x6 = x5 + (int) (length * Math.cos(Math.toRadians(angle5)));
-        int y6 = y5 - (int) (length * Math.sin(Math.toRadians(angle5)));
-        g2d.drawLine(x5, y5, x6, y6);
+        xPositions[0] = centerX;
+        yPositions[0] = centerY;
 
-        int x7 = x6 + (int) (length * Math.cos(Math.toRadians(angle6)));
-        int y7 = y6 - (int) (length * Math.sin(Math.toRadians(angle6)));
-        g2d.drawLine(x6, y6, x7, y7);
+        int x2 = centerX, y2 = centerY;
+        for (int i = 0; i < angles.length; i++) {
+            int x3 = x2 + (int) (length * Math.cos(Math.toRadians(angles[i])));
+            int y3 = y2 - (int) (length * Math.sin(Math.toRadians(angles[i])));
 
-        g2d.setColor(Color.BLUE);
-        g2d.fillOval(x1 - 5, y1 - 5, 10, 10); // Joint 1
-        g2d.fillOval(x2 - 5, y2 - 5, 10, 10); // Joint 2
-        g2d.fillOval(x3 - 5, y3 - 5, 10, 10); // Joint 3
-        g2d.fillOval(x4 - 5, y4 - 5, 10, 10); // Joint 4
-        g2d.fillOval(x5 - 5, y5 - 5, 10, 10); // Joint 5
-        g2d.fillOval(x6 - 5, y6 - 5, 10, 10); // Joint 6
-        g2d.fillOval(x7 - 5, y7 - 5, 10, 10); // End Effector
+            // Set color and draw line
+            g2d.setColor(colors[i]);
+            g2d.drawLine(x2, y2, x3, y3);
+
+            xPositions[i + 1] = x3;
+            yPositions[i + 1] = y3;
+
+            x2 = x3;
+            y2 = y3;
+        }
+
+        drawJoints(g2d, xPositions, yPositions);
     }
+
+    /***
+     * Draws the joints (as filled ovals) for the robotic arm segments.
+     * @param g2d Graphics2D object for drawing.
+     * @param xPositions Array of x coordinates for the joints.
+     * @param yPositions Array of y coordinates for the joints.
+     */
+    private void drawJoints(Graphics2D g2d, int[] xPositions, int[] yPositions) {
+        g2d.setColor(Color.WHITE);
+        for (int i = 0; i < xPositions.length; i++) {
+            g2d.fillOval(xPositions[i] - 5, yPositions[i] - 5, 10, 10);
+        }
+    }
+
 }
